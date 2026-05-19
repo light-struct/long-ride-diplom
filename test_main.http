@@ -1,0 +1,27 @@
+# Basic smoke checks
+
+### Register
+POST http://127.0.0.1:8000/auth/register
+Content-Type: application/json
+
+{
+  "email": "demo@example.com",
+  "password": "12345"
+}
+
+### Login
+POST http://127.0.0.1:8000/auth/login
+Content-Type: application/json
+
+{
+  "email": "demo@example.com",
+  "password": "12345"
+}
+
+### Me (replace token)
+GET http://127.0.0.1:8000/auth/me
+Authorization: Bearer REPLACE_WITH_TOKEN
+
+### Protected guides endpoint (replace token)
+GET http://127.0.0.1:8000/guides
+Authorization: Bearer REPLACE_WITH_TOKEN

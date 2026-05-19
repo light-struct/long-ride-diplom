@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Long Ride</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='8' cy='22' r='6' stroke='%230f766e' stroke-width='2' fill='none'/%3E%3Ccircle cx='24' cy='22' r='6' stroke='%230f766e' stroke-width='2' fill='none'/%3E%3Cpath d='M8 22 L14 10 L18 16 L22 10 L24 22' stroke='%230f766e' stroke-width='2' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+
+    <div id="authView" class="auth-screen">
+      <div class="auth-top-controls">
+        <select id="authLangSelect" class="lang-select">
+          <option value="ru">RU</option>
+          <option value="kk">KK</option>
+          <option value="en">EN</option>
+        </select>
+        <button id="authThemeBtn" class="btn-icon" aria-label="Сменить тему">
+          <svg id="authThemeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+      <div class="auth-card">
+        <div class="auth-logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <circle cx="8" cy="22" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+            <circle cx="24" cy="22" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+            <path d="M8 22 L14 10 L18 16 L22 10 L24 22" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/>
+          </svg>
+          <span data-i18n="brand">Long Ride</span>
+        </div>
+        <p class="auth-subtitle" data-i18n="subtitle">Учет велосипедов и обслуживания</p>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="email_label">Email</label>
+          <input id="email" type="email" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="password_label">Пароль</label>
+          <input id="password" type="password" class="form-input" />
+        </div>
+        <div class="auth-actions">
+          <button id="loginBtn" class="btn btn-primary" data-i18n="login">Войти</button>
+          <button id="registerBtn" class="btn btn-outline" data-i18n="register">Регистрация</button>
+        </div>
+        <button id="forgotBtn" class="btn-link" data-i18n="forgot">Забыл пароль</button>
+
+        <div id="forgotPanel" class="forgot-panel hidden">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <div class="input-row">
+              <input id="forgotEmail" type="email" class="form-input" placeholder="email" />
+              <button id="requestCodeBtn" class="btn btn-outline btn-sm" data-i18n="send_code">Отправить код</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-row">
+              <input id="resetCode" class="form-input" placeholder="код" />
+              <input id="newPassword" type="password" class="form-input" placeholder="новый пароль" />
+              <button id="resetPasswordBtn" class="btn btn-outline btn-sm" data-i18n="reset_password">Сбросить</button>
+            </div>
+          </div>
+          <pre id="forgotOut"></pre>
+        </div>
+        <pre id="authOut"></pre>
+      </div>
+    </div>
+
+    <div id="appView" class="app hidden">
+
+      <nav class="sidebar" id="sidebar" aria-label="Навигация">
+        <div class="sidebar-header">
+          <div class="sidebar-logo">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <circle cx="8" cy="22" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+              <circle cx="24" cy="22" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path d="M8 22 L14 10 L18 16 L22 10 L24 22" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/>
+            </svg>
+            <span data-i18n="brand">Long Ride</span>
+          </div>
+          <div class="sidebar-user">
+            <p id="userInfo" class="sidebar-email"></p>
+            <p id="partstatus" class="sidebar-partstatus"></p>
+          </div>
+        </div>
+
+        <div class="sidebar-nav">
+          <button class="nav-item tab-btn is-active" data-tab="home">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span data-i18n="tab_home">Главная</span>
+          </button>
+          <button class="nav-item tab-btn" data-tab="bikes">
+            <svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8" cy="22" r="5"/><circle cx="24" cy="22" r="5"/><path d="M8 22 L14 10 L18 16 L22 10 L24 22" stroke-linejoin="round"/></svg>
+            <span data-i18n="tab_bikes">Велосипеды</span>
+          </button>
+          <button class="nav-item tab-btn" data-tab="guides">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+            <span data-i18n="tab_guides">Гайды</span>
+          </button>
+          <button class="nav-item tab-btn" data-tab="assistant">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <span data-i18n="tab_assistant">Ассистент</span>
+          </button>
+          <button class="nav-item tab-btn" data-tab="profile">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span data-i18n="tab_profile">Профиль</span>
+          </button>
+          <button id="adminTabBtn" class="nav-item tab-btn hidden" data-tab="admin">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span data-i18n="tab_admin">Админ</span>
+          </button>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="sidebar-controls">
+            <select id="langSelect" class="lang-select" aria-label="Язык">
+              <option value="ru">RU</option>
+              <option value="kk">KK</option>
+              <option value="en">EN</option>
+            </select>
+            <button id="themeBtn" class="btn-icon" aria-label="Сменить тему" title="Тема">
+              <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </button>
+            <button id="logoutBtn" class="btn-icon btn-icon-danger" aria-label="Выйти" title="Выйти">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            </button>
+          </div>
+          <p class="sidebar-copyright" data-i18n="owner_footer">© 2026 Long Ride</p>
+        </div>
+      </nav>
+
+      <main class="main-content" id="mainContent">
+
+        <section id="tab-home" class="tab">
+          <div class="page-header">
+            <h1 class="page-title" data-i18n="home_title">Главная</h1>
+          </div>
+          <p id="homeSummary" class="page-subtitle"></p>
+
+          <div class="stats-grid" id="homeStatsGrid"></div>
+
+          <div class="card">
+            <h2 class="card-title" data-i18n="about_title">О проекте</h2>
+            <p class="text-muted" data-i18n="about_text">Этот проект помогает вести учет велосипедов и обслуживания.</p>
+            <h3 class="section-title" data-i18n="features_title">Функционал</h3>
+            <ul class="feature-list">
+              <li data-i18n="feature_1">Учет велосипедов и пробега</li>
+              <li data-i18n="feature_2">Компоненты и их ресурс</li>
+              <li data-i18n="feature_3">Гайды по обслуживанию по языкам</li>
+              <li data-i18n="feature_4">Профиль, смена пароля и админ-панели</li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="tab-bikes" class="tab hidden">
+          <div class="page-header">
+            <h1 class="page-title" data-i18n="tab_bikes">Велосипеды</h1>
+          </div>
+
+          <div class="two-col">
+            <div class="card">
+              <h2 class="card-title" data-i18n="ride_title">Сколько на этот раз проехали?</h2>
+              <div class="form-group">
+                <label class="form-label" data-i18n="ride_km_label">Пробег за поездку (км)</label>
+                <input id="rideKm" type="number" step="0.1" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="bike_label">Велосипед</label>
+                <select id="mileageBikeId" class="form-input"></select>
+              </div>
+              <button id="addRideBtn" class="btn btn-primary" style="margin-top:8px" data-i18n="add_mileage">Добавить пробег</button>
+              <pre id="bikeOut"></pre>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h2 class="card-title" data-i18n="list">Список</h2>
+                <button id="toggleCreateBikeBtn" class="btn btn-primary btn-sm" data-i18n="add_bike">+ Добавить</button>
+              </div>
+
+              <section id="createBikePanel" class="inline-form hidden">
+                <div class="form-group">
+                  <label class="form-label" data-i18n="name_label">Название</label>
+                  <input id="bikeName" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" data-i18n="type_label">Тип</label>
+                  <input id="bikeType" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" data-i18n="mileage_label">Пробег</label>
+                  <input id="bikeKm" type="number" step="0.1" class="form-input" />
+                </div>
+                <div class="form-row">
+                  <button id="createBikeBtn" class="btn btn-primary btn-sm" data-i18n="add">Добавить</button>
+                  <button id="closeCreateBikeBtn" class="btn btn-ghost btn-sm" data-i18n="close">Закрыть</button>
+                </div>
+              </section>
+
+              <div id="bikesList"></div>
+            </div>
+          </div>
+
+          <div id="bikeDetail" class="card hidden" style="margin-top:16px">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title" id="bikeTitle" data-i18n="bike_entity">Велосипед</h2>
+                <p id="bikeMileageInfo" class="text-muted"></p>
+              </div>
+              <button id="closeBikeBtn" class="btn btn-ghost btn-sm" data-i18n="close">Закрыть</button>
+            </div>
+
+            <div class="divider"></div>
+            <h3 class="section-title">Редактировать</h3>
+            <div class="form-inline">
+              <div class="form-group">
+                <label class="form-label" data-i18n="name_label">Название</label>
+                <input id="editBikeName" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="type_label">Тип</label>
+                <input id="editBikeType" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="mileage_label">Пробег</label>
+                <input id="editBikeKm" type="number" step="0.1" class="form-input" />
+              </div>
+              <button id="saveBikeBtn" class="btn btn-primary btn-sm" style="align-self:flex-end" data-i18n="save">Сохранить</button>
+            </div>
+
+            <div class="divider"></div>
+            <h3 class="section-title" data-i18n="components">Компоненты</h3>
+            <div class="form-inline">
+              <div class="form-group">
+                <label class="form-label" data-i18n="name_label">Название</label>
+                <input id="partName" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="category_label">Категория</label>
+                <input id="partCategory" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="current_mileage_label">Текущий пробег</label>
+                <input id="partCurrent" type="number" step="0.1" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="max_mileage_label">Макс.пробег</label>
+                <input id="partResource" type="number" class="form-input" />
+              </div>
+              <button id="createPartBtn" class="btn btn-primary btn-sm" style="align-self:flex-end" data-i18n="add_component">+ Компонент</button>
+            </div>
+            <pre id="partOut"></pre>
+
+            <section id="partEditPanel" class="inline-form hidden" style="margin-top:16px">
+              <h3 class="section-title" data-i18n="edit_component">Редактировать компонент</h3>
+              <div class="form-inline">
+                <div class="form-group">
+                  <label class="form-label" data-i18n="name_label">Название</label>
+                  <input id="partEditName" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" data-i18n="category_label">Категория</label>
+                  <input id="partEditCategory" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" data-i18n="current_mileage_label">Текущий пробег</label>
+                  <input id="partEditCurrent" type="number" step="0.1" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" data-i18n="max_mileage_label">Макс.пробег</label>
+                  <input id="partEditResource" type="number" step="0.1" class="form-input" />
+                </div>
+              </div>
+              <div class="form-row">
+                <button id="savePartBtn" class="btn btn-primary btn-sm" data-i18n="save">Сохранить</button>
+                <button id="cancelPartEditBtn" class="btn btn-ghost btn-sm" data-i18n="cancel">Отмена</button>
+              </div>
+              <pre id="partEditOut"></pre>
+            </section>
+
+            <div id="partsList" style="margin-top:12px"></div>
+          </div>
+        </section>
+
+        <section id="tab-guides" class="tab hidden">
+          <div class="page-header">
+            <h1 class="page-title" data-i18n="tab_guides">Гайды</h1>
+          </div>
+          <div id="guidesList"></div>
+        </section>
+
+        <section id="tab-assistant" class="tab hidden">
+          <div class="page-header">
+            <h1 class="page-title" data-i18n="tab_assistant">AI Ассистент</h1>
+          </div>
+          <div class="card">
+            <div class="chat-area" id="chatArea"></div>
+            <div class="chat-input-row">
+              <textarea id="question" rows="2" class="form-input chat-input" data-i18n-placeholder="assistant_placeholder" placeholder="Задай вопрос по обслуживанию велосипеда"></textarea>
+              <button id="askBtn" class="btn btn-primary" data-i18n="ask">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section id="tab-profile" class="tab hidden">
+          <div class="page-header">
+            <h1 class="page-title" data-i18n="profile_title">Профиль</h1>
+          </div>
+          <div class="card">
+            <p class="form-label" data-i18n="email_label">Email</p>
+            <p id="profileEmail" class="profile-email"></p>
+            <div class="divider"></div>
+            <h3 class="section-title" data-i18n="change_password">Сменить пароль</h3>
+            <div class="form-group">
+              <label class="form-label" data-i18n="current_password">Текущий пароль</label>
+              <input id="currentPassword" type="password" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="new_password">Новый пароль</label>
+              <input id="profileNewPassword" type="password" class="form-input" />
+            </div>
+            <button id="changePasswordBtn" class="btn btn-primary" style="margin-top:8px" data-i18n="change_password">Сменить пароль</button>
+            <pre id="profileOut"></pre>
+          </div>
+        </section>
+
+        <section id="tab-admin" class="tab hidden">
+          <div class="page-header">
+            <h1 class="page-title" data-i18n="admin_title">Панель администратора</h1>
+          </div>
+          <div class="card">
+            <p class="text-muted" data-i18n="admin_desc">У вас есть права администратора.</p>
+            <p id="adminInfo" class="text-muted"></p>
+            <div class="form-row">
+              <button id="openAdminUsersPageBtn" class="btn btn-primary" data-i18n="admin_users">Пользователи</button>
+              <button id="openAdminGuidesPageBtn" class="btn btn-outline" data-i18n="tab_guides">Гайды</button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <nav class="bottom-nav" aria-label="Нижняя навигация">
+        <button class="bottom-nav-item tab-btn is-active" data-tab="home">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span data-i18n="tab_home">Главная</span>
+        </button>
+        <button class="bottom-nav-item tab-btn" data-tab="bikes">
+          <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8" cy="22" r="5"/><circle cx="24" cy="22" r="5"/><path d="M8 22 L14 10 L18 16 L22 10 L24 22" stroke-linejoin="round"/></svg>
+          <span data-i18n="tab_bikes">Велосипеды</span>
+        </button>
+        <button class="bottom-nav-item tab-btn" data-tab="guides">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          <span data-i18n="tab_guides">Гайды</span>
+        </button>
+        <button class="bottom-nav-item tab-btn" data-tab="assistant">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <span data-i18n="tab_assistant">AI</span>
+        </button>
+        <button class="bottom-nav-item tab-btn" data-tab="profile">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span data-i18n="tab_profile">Профиль</span>
+        </button>
+      </nav>
+    </div>
+
+    <div id="adminUsersPage" class="admin-page hidden">
+      <div class="admin-page-header">
+        <button id="closeAdminUsersPageBtn" class="btn btn-ghost btn-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          <span data-i18n="back">Назад</span>
+        </button>
+        <h2 data-i18n="admin_users">Пользователи</h2>
+        <div class="admin-page-controls">
+          <select id="adminLangSelect" class="lang-select"><option value="ru">RU</option><option value="kk">KK</option><option value="en">EN</option></select>
+          <button id="adminThemeBtn" class="btn-icon" aria-label="Тема">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="admin-page-body">
+        <div class="card">
+          <h3 class="section-title" data-i18n="add_user">Добавить пользователя</h3>
+          <div class="form-inline">
+            <div class="form-group">
+              <label class="form-label" data-i18n="email_label">Email</label>
+              <input id="adminUserEmail" type="email" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="password_label">Пароль</label>
+              <input id="adminUserPassword" type="password" class="form-input" />
+            </div>
+            <button id="adminCreateUserBtn" class="btn btn-primary btn-sm" style="align-self:flex-end" data-i18n="add_user">Добавить</button>
+          </div>
+          <pre id="adminOut"></pre>
+        </div>
+
+        <div id="adminUsersList" style="margin-top:16px"></div>
+
+        <section id="adminUserEditPanel" class="card hidden" style="margin-top:16px">
+          <h3 class="section-title" data-i18n="edit_user">Редактировать пользователя</h3>
+          <input id="adminEditUserId" type="hidden" />
+          <div class="form-inline">
+            <div class="form-group">
+              <label class="form-label" data-i18n="email_label">Email</label>
+              <input id="adminEditUserEmail" type="email" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="password_label">Пароль</label>
+              <input id="adminEditUserPassword" type="password" class="form-input" />
+            </div>
+            <button id="adminSaveUserBtn" class="btn btn-primary btn-sm" style="align-self:flex-end" data-i18n="save">Сохранить</button>
+          </div>
+        </section>
+
+        <div class="divider" style="margin:24px 0"></div>
+        <h3 class="section-title" data-i18n="user_bikes">Велосипеды пользователя</h3>
+        <p id="adminBikesTitle" class="text-muted"></p>
+        <div class="card">
+          <div class="form-inline">
+            <div class="form-group">
+              <label class="form-label" data-i18n="name_label">Название</label>
+              <input id="adminBikeName" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="type_label">Тип</label>
+              <input id="adminBikeType" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="mileage_label">Пробег</label>
+              <input id="adminBikeKm" type="number" step="0.1" class="form-input" />
+            </div>
+            <button id="adminCreateBikeBtn" class="btn btn-primary btn-sm" style="align-self:flex-end" data-i18n="add_bike">Добавить</button>
+          </div>
+        </div>
+        <div id="adminBikesList" style="margin-top:12px"></div>
+        <section id="adminBikeEditPanel" class="card hidden" style="margin-top:16px">
+          <h3 class="section-title" data-i18n="edit_bike">Редактировать велосипед</h3>
+          <input id="adminEditBikeId" type="hidden" />
+          <div class="form-inline">
+            <div class="form-group">
+              <label class="form-label" data-i18n="name_label">Название</label>
+              <input id="adminEditBikeName" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="type_label">Тип</label>
+              <input id="adminEditBikeType" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="mileage_label">Пробег</label>
+              <input id="adminEditBikeKm" type="number" step="0.1" class="form-input" />
+            </div>
+            <button id="adminSaveBikeBtn" class="btn btn-primary btn-sm" style="align-self:flex-end" data-i18n="save">Сохранить</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="adminGuidesPage" class="admin-page hidden">
+      <div class="admin-page-header">
+        <button id="closeAdminGuidesPageBtn" class="btn btn-ghost btn-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          <span data-i18n="back">Назад</span>
+        </button>
+        <h2 data-i18n="tab_guides">Гайды</h2>
+        <div class="admin-page-controls">
+          <select id="adminGuidesLangSelect" class="lang-select"><option value="ru">RU</option><option value="kk">KK</option><option value="en">EN</option></select>
+          <button id="adminGuidesThemeBtn" class="btn-icon" aria-label="Тема">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="admin-page-body">
+        <div class="card">
+          <h3 class="section-title" data-i18n="add_guide">Добавить гайд</h3>
+          <div class="form-group">
+            <label class="form-label" data-i18n="title_label">Заголовок</label>
+            <input id="adminGuideTitle" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="topic_lang">Язык (ru/en/kk)</label>
+            <select id="adminGuideTopic" class="form-input">
+              <option value="ru">RU</option>
+              <option value="kk">KK</option>
+              <option value="en">EN</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="content_label">Содержимое</label>
+            <textarea id="adminGuideContent" rows="4" class="form-input"></textarea>
+          </div>
+          <button id="adminCreateGuideBtn" class="btn btn-primary btn-sm" data-i18n="add_guide">Добавить гайд</button>
+        </div>
+
+        <div id="adminGuidesList" style="margin-top:16px"></div>
+
+        <section id="adminGuideEditPanel" class="card hidden" style="margin-top:16px">
+          <h3 class="section-title" data-i18n="edit_guide">Редактировать гайд</h3>
+          <input id="adminEditGuideId" type="hidden" />
+          <div class="form-group">
+            <label class="form-label" data-i18n="title_label">Заголовок</label>
+            <input id="adminEditGuideTitle" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="topic_lang">Язык</label>
+            <select id="adminEditGuideTopic" class="form-input">
+              <option value="ru">RU</option>
+              <option value="kk">KK</option>
+              <option value="en">EN</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="content_label">Содержимое</label>
+            <textarea id="adminEditGuideContent" rows="4" class="form-input"></textarea>
+          </div>
+          <button id="adminSaveGuideBtn" class="btn btn-primary btn-sm" data-i18n="save">Сохранить</button>
+        </section>
+      </div>
+    </div>
+
+    <div id="confirmModal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-overlay"></div>
+      <section class="modal-card">
+        <h3 class="modal-title" data-i18n="confirm">Подтверждение</h3>
+        <p id="confirmText" class="modal-text"></p>
+        <div class="modal-actions">
+          <button id="confirmOkBtn" class="btn btn-danger" data-i18n="confirm_btn">Подтвердить</button>
+          <button id="confirmCancelBtn" class="btn btn-ghost" data-i18n="cancel">Отмена</button>
+        </div>
+      </section>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
