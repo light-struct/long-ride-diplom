@@ -12,6 +12,7 @@ Minimal FastAPI + PostgreSQL app for bike maintenance tracking with a single-pag
 python3 -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
+cp .env.example .env   # fill in DATABASE_URL and GROQ_API_KEY
 uvicorn app.main:app --reload --port 8000
 ```
 
@@ -23,10 +24,13 @@ Open:
 Create/update `.env` in project root:
 
 ```env
-DATABASE_URL=postgresql://<user>:<password>@<host>/<db>?sslmode=require
+APP_NAME=LongRide
+DEBUG=true
+DATABASE_URL=...
 GROQ_API_KEY=...
 GROQ_MODEL=llama-3.1-8b-instant
 GROQ_API_URL=https://api.groq.com/openai/v1/chat/completions
+ADMIN_EMAIL=...
 ```
 
 Notes:

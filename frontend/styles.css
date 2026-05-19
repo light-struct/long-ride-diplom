@@ -215,8 +215,8 @@ select.form-input { cursor: pointer; }
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
+  border-radius: 12px;
+  padding: 20px 24px;
   box-shadow: var(--shadow-sm);
 }
 .card-header {
@@ -234,12 +234,14 @@ select.form-input { cursor: pointer; }
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px;
+  padding: 12px 14px;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
+  border-radius: 10px;
+  background: var(--bg-2);
   margin-top: 8px;
+  transition: border-color 0.15s;
 }
+.list-item:hover { border-color: var(--accent); }
 .list-item:first-child { margin-top: 0; }
 .list-item-body { flex: 1; min-width: 0; }
 .list-item-name { font-size: 14px; font-weight: 500; color: var(--text); display: block; }
@@ -268,26 +270,26 @@ select.form-input { cursor: pointer; }
 .inline-form {
   background: var(--bg-2);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 10px;
   padding: 16px;
   margin-top: 12px;
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 12px;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
 }
 .stat-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
+  border-radius: 12px;
+  padding: 20px;
   box-shadow: var(--shadow-sm);
 }
-.stat-value { font-size: 26px; font-weight: 700; color: var(--accent); line-height: 1; }
-.stat-label { font-size: 12px; color: var(--text-3); margin-top: 4px; }
+.stat-value { font-size: 30px; font-weight: 700; color: var(--accent); line-height: 1; }
+.stat-label { font-size: 13px; color: var(--text-3); margin-top: 6px; }
 
 .page-header { margin-bottom: 20px; }
 .page-title  { font-size: 20px; font-weight: 700; }
@@ -297,6 +299,7 @@ select.form-input { cursor: pointer; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+  align-items: start;
 }
 
 .feature-list {
@@ -325,12 +328,14 @@ select.form-input { cursor: pointer; }
 .guide-item {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 20px;
+  border-radius: 12px;
+  padding: 18px 22px;
   margin-bottom: 10px;
   box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s;
 }
-.guide-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.guide-item:hover { border-color: var(--accent); }
+.guide-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
 .guide-content { font-size: 13px; color: var(--text-2); line-height: 1.6; white-space: pre-wrap; }
 
 .chat-area {
@@ -373,7 +378,7 @@ select.form-input { cursor: pointer; }
 
 .profile-email { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 0; }
 
-   AUTH SCREEN
+
 .auth-screen {
   min-height: 100vh;
   display: flex;
@@ -425,7 +430,7 @@ select.form-input { cursor: pointer; }
   margin-top: 12px;
 }
 
-   APP SHELL
+
 .app {
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr;
@@ -525,13 +530,13 @@ select.form-input { cursor: pointer; }
 .main-content {
   grid-column: 2;
   padding: 28px 32px;
-  max-width: 900px;
   min-height: 100vh;
+  min-width: 0;
 }
 
 .bottom-nav { display: none; }
 
-   ADMIN FULL-PAGE
+
 .admin-page {
   min-height: 100vh;
   background: var(--bg);
@@ -551,7 +556,7 @@ select.form-input { cursor: pointer; }
 .admin-page-controls { display: flex; gap: 8px; align-items: center; }
 .admin-page-body { padding: 24px; max-width: 900px; margin: 0 auto; }
 
-   MODAL
+
 .modal {
   position: fixed;
   inset: 0;
@@ -569,11 +574,11 @@ select.form-input { cursor: pointer; }
 }
 .modal-card {
   position: relative;
-  width: min(420px, 100%);
+  width: min(440px, 100%);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 28px 24px;
+  padding: 28px 28px;
   box-shadow: var(--shadow-lg);
   animation: modalIn 0.2s ease-out;
 }
@@ -586,7 +591,7 @@ select.form-input { cursor: pointer; }
   to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-   RESPONSIVE
+
 @media (max-width: 860px) {
   .app {
     grid-template-columns: 1fr;
