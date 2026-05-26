@@ -67,11 +67,14 @@ def init_db() -> None:
                 id BIGSERIAL PRIMARY KEY,
                 bike_id BIGINT NOT NULL REFERENCES bikes(id) ON DELETE CASCADE,
                 name TEXT NOT NULL,
-                category TEXT NOT NULL,
+                category TEXT,
                 current_mileage_km DOUBLE PRECISION NOT NULL DEFAULT 0,
                 resource_km DOUBLE PRECISION NOT NULL DEFAULT 1000
             )
             """
+            )
+            cur.execute(
+                "ALTER TABLE parts ALTER COLUMN category DROP NOT NULL"
             )
             cur.execute(
                 """

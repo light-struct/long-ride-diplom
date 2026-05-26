@@ -47,7 +47,7 @@ class BikeMileageDeltaIn(BaseModel):
 
 class PartIn(BaseModel):
     name: str = Field(min_length=1, max_length=100)
-    category: str = Field(min_length=1, max_length=40)
+    category: str | None = Field(default=None, max_length=40)
     current_mileage_km: float = 0
     resource_km: float = 1000
 

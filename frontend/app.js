@@ -492,7 +492,7 @@ const closeBike = () => {
 const loadParts = async (bikeId) => {
   const parts = await App.api(`/bikes/${bikeId}/parts`);
   $("partsList").innerHTML = parts
-    .map((p) => `<div class="row"><div><b>${p.name}</b><span class="muted">${p.category} | ${p.current_mileage_km}/${p.resource_km} км</span><span class="status-badge status-${p.status}">${statusMeta(p.status).icon} ${statusMeta(p.status).label}</span></div><div class="actions"><button data-edit-part="${p.id}">${t("edit_component")}</button><button data-del-part="${p.id}" class="btn-danger">${t("delete")}</button></div></div>`)
+    .map((p) => `<div class="list-item"><div class="list-item-body"><span class="list-item-name">${p.name}${p.category ? ` <span class="text-small" style="font-weight:400">${p.category}</span>` : ''}</span><span class="list-item-meta">${p.current_mileage_km} / ${p.resource_km} км &nbsp;<span class="badge badge-${p.status}">${statusMeta(p.status).icon} ${statusMeta(p.status).label}</span></span></div><div class="list-item-actions"><button class="btn-icon" data-edit-part="${p.id}" title="${t('edit_component')}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="btn-icon btn-icon-danger" data-del-part="${p.id}" title="${t('delete')}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button></div></div>`)
     .join("");
   parts.forEach((part) => {
     const editBtn = document.querySelector(`[data-edit-part="${part.id}"]`);
@@ -500,7 +500,7 @@ const loadParts = async (bikeId) => {
     if (editBtn) editBtn.onclick = () => {
       state.partEditId = part.id;
       $("partEditName").value = part.name;
-      $("partEditCategory").value = part.category;
+      $("partEditCategory").value = part.category ?? "";
       $("partEditCurrent").value = part.current_mileage_km;
       $("partEditResource").value = part.resource_km;
       show("partEditPanel", true);
@@ -800,7 +800,7 @@ $("createPartBtn").onclick = async () => {
   try {
     const payload = {
       name: $("partName").value.trim(),
-      category: $("partCategory").value.trim(),
+      category: $("partCategory").value.trim() || null,
       current_mileage_km: parseNumberOr($("partCurrent").value, 0),
       resource_km: parseNumberOr($("partResource").value, 1000),
     };
@@ -822,7 +822,7 @@ $("savePartBtn").onclick = async () => {
   try {
     const payload = {
       name: $("partEditName").value.trim(),
-      category: $("partEditCategory").value.trim(),
+      category: $("partEditCategory").value.trim() || null,
       current_mileage_km: Number($("partEditCurrent").value || 0),
       resource_km: Number($("partEditResource").value || 0),
     };
