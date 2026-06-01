@@ -702,6 +702,7 @@ $("resetPasswordBtn").onclick = async () => {
 $("logoutBtn").onclick = async () => {
   App.token = null;
   closeBike();
+  $("chatArea").innerHTML = "";
   await renderAppShell();
 };
 
@@ -804,7 +805,7 @@ $("createPartBtn").onclick = async () => {
       current_mileage_km: parseNumberOr($("partCurrent").value, 0),
       resource_km: parseNumberOr($("partResource").value, 1000),
     };
-    if (!payload.name || !payload.category || payload.resource_km <= 0) return;
+    if (!payload.name || payload.resource_km <= 0) return;
     await App.api(`/bikes/${state.selectedBike.id}/parts`, "POST", payload);
     $("partName").value = "";
     $("partCategory").value = "";
@@ -826,7 +827,7 @@ $("savePartBtn").onclick = async () => {
       current_mileage_km: Number($("partEditCurrent").value || 0),
       resource_km: Number($("partEditResource").value || 0),
     };
-    if (!payload.name || !payload.category || payload.resource_km <= 0) return;
+    if (!payload.name || payload.resource_km <= 0) return;
     await App.api(`/parts/${state.partEditId}`, "PATCH", payload);
     closePartEdit();
     await openBike(state.selectedBike.id);
